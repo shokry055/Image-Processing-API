@@ -14,11 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express")); // load express server
 const file_1 = __importDefault(require("./../../src/file")); // load file system
-/**
- * Validate query.
- * @param {imageData} query Query object passed by express.
- * @return {null|string} Null if valid or error message.
- */
 const validate = (query) => __awaiter(void 0, void 0, void 0, function* () {
     // if image is exists
     if (!(yield file_1.default.isImageAvailable(query.filename))) {
@@ -26,7 +21,7 @@ const validate = (query) => __awaiter(void 0, void 0, void 0, function* () {
         return `there is no image as you requested please select one of : ${availableImageNames}.`;
     }
     if (!query.width && !query.height) {
-        return null; // get full size no dimintions requested
+        return null; // get full image size
     }
     // if width is vaild int
     const width = parseInt(query.width || '');
@@ -42,23 +37,19 @@ const validate = (query) => __awaiter(void 0, void 0, void 0, function* () {
 });
 const imagApi = express_1.default.Router();
 imagApi.get('/', (request, response) => __awaiter(void 0, void 0, void 0, function* () {
-    // Check whether request can be worked with
     const validationMessage = yield validate(request.query);
     if (validationMessage) {
         response.send(validationMessage);
         return;
     }
     let error = '';
-    // Create thumbnail if not yet available
     if (!(yield file_1.default.isThumbAvailable(request.query))) {
         error = yield file_1.default.createThumb(request.query);
     }
-    // if is there error 
     if (error) {
         response.send(error);
         return;
     }
-    // get and view image
     const path = yield file_1.default.getImagePath(request.query);
     if (path) {
         response.sendFile(path);

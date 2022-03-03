@@ -5,11 +5,6 @@ interface imageData {
   width?: string;
   height?: string;
 }
-/**
- * Validate query.
- * @param {imageData} query Query object passed by express.
- * @return {null|string} Null if valid or error message.
- */
  const validate = async (query: imageData): Promise<null | string> => {
   // if image is exists
   if (!(await File.isImageAvailable(query.filename))) {
@@ -19,7 +14,7 @@ interface imageData {
     return `there is no image as you requested please select one of : ${availableImageNames}.`;
   }
   if (!query.width && !query.height) {
-    return null; // get full size no dimintions requested
+    return null; // get full image size
   }
   // if width is vaild int
   const width: number = parseInt(query.width || '');
@@ -40,23 +35,19 @@ imagApi.get(
     request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    // Check whether request can be worked with
     const validationMessage: null | string = await validate(request.query);
     if (validationMessage) {
       response.send(validationMessage);
       return;
     }
     let error: null | string = '';
-    // Create thumbnail if not yet available
     if (!(await File.isThumbAvailable(request.query))) {
       error = await File.createThumb(request.query);
     }
-    // if is there error 
     if (error) {
       response.send(error);
       return;
     }
-    // get and view image
     const path: null | string = await File.getImagePath(request.query);
     if (path) {
       response.sendFile(path);

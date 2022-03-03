@@ -9,14 +9,17 @@ const imageRoute = express_1.default.Router();
 imageRoute.use('/api/imagApi', imagApi_1.default);
 imageRoute.get('/', (request, response) => {
     // This could be done by serving views ... Just quick and dirty for now :-)
-    response.send('<h1>image processing api</h1> \
-      <p>Listening at \
-      <code><a href="/api/imagApi">/api/imagApi</a></code> \
-       for queries containing at least a valid filename. Optionally use both width and height to set the size...</p> \
-       <p>Examples: \
+    response.send('<h2>welcome to my image p API</h2> \
+       <h5>please use folowing urls to test<h5> \
        <ul> \
        <li><a href="/api/imagApi?filename=image1">/api/imagApi?filename=image1</a></li> \
        <li><a href="/api/imagApi?filename=image1&width=100&height=100">/api/imagApi?filename=image1&width=100&height=100</a></li> \
+       <li><a href="/api/imagApi?filename=image2">/api/imagApi?filename=image2</a></li> \
+       <li><a href="/api/imagApi?filename=image2&width=100&height=100">/api/imagApi?filename=image2&width=100&height=100</a></li> \
+       <li><a href="/api/imagApi?filename=image3">/api/imagApi?filename=image3</a></li> \
+       <li><a href="/api/imagApi?filename=image3&width=100&height=100">/api/imagApi?filename=image3&width=100&height=100</a></li> \
+       <li><a href="/api/imagApi?filename=image4">/api/imagApi?filename=image4</a></li> \
+       <li><a href="/api/imagApi?filename=image4&width=100&height=100">/api/imagApi?filename=image4&width=100&height=100</a></li> \
        </ul> \
        </p>');
 });
